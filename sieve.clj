@@ -5,7 +5,7 @@
   (not (= 0 (mod n p))))
 
 (defn keep-number? [p n]
-  (if (not= n p) 
+  (if (not (= n p)) 
     (is-multiple? p n)
     true))
 
