@@ -1,7 +1,5 @@
 ;; Inspired by CS103 and 4clojure 164
 ;; by Cristobal Sciutto
-(ns dfa.core
-  (:require [clojure.set :as set]))
 
 ;; Example DFA
 (def example-dfa
@@ -45,7 +43,8 @@
          states  (next-states dfa current-state)]
      (if (empty? letters)
        #{}
-       (set/union (current-strings dfa current-state current-string letters)
-                  (apply set/union (map (fn [state letter] 
-                                          (gen-all-strings dfa state (str current-string letter) strings))
-                                        states letters)))))))
+       (clojure.set/union 
+         (current-strings dfa current-state current-string letters)
+         (apply clojure.set/union (map (fn [state letter] 
+                                         (gen-all-strings dfa state (str current-string letter) strings))
+                                       states letters)))))))
