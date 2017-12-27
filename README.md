@@ -1,7 +1,8 @@
 # Challenges
-My solutions for Project Euler, SPOJ, 99 problems in Haskell, etc
+Small projects and solutions to challenges
 
 Some highlights, in my opinion, are:
+- Lisp Interpreter in C: `/lisp/lisp.c`
 - Game of Life implementation in Clojure: `life.clj`
 - DFA executer in Clojure: `dfa.clj`
 - Solution to Euler #19: `/euler/p019`
