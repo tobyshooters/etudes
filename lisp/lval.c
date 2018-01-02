@@ -81,6 +81,14 @@ lval* lval_take(lval* v, int i) {
     return x;
 }
 
+lval* lval_join(lval* x, lval* y) {
+    while (y->count) {
+        x = lval_add(x, lval_pop(y, 0));
+    }
+    lval_del(y);
+    return x;
+}
+
 /////////////////////////////////////////////////////////
 // PRINTING /////////////////////////////////////////////
 /////////////////////////////////////////////////////////

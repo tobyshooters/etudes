@@ -28,6 +28,7 @@ lval* lval_qexpr(void);
 void lval_del(lval* v);
 
 // Helpers
+lval* lval_join(lval* x, lval* y);
 lval* lval_pop(lval* v, int i);
 lval* lval_take(lval* v, int i);
 
