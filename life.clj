@@ -22,12 +22,12 @@
   [board]
   (let [up    (cycle-rows board  1)
         down  (cycle-rows board -1)]
-    [(cycle-cols board  1)
+    [(cycle-cols board 1)
      (cycle-cols board -1)
-     (cycle-cols up     1)
-     (cycle-cols up    -1)
-     (cycle-cols down   1)
-     (cycle-cols down  -1) up down]))
+     (cycle-cols up 1)
+     (cycle-cols up -1)
+     (cycle-cols down 1)
+     (cycle-cols down -1) up down]))
 
 (defn pad
   "Pads a collection with a given padding"
