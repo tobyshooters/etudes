@@ -24,7 +24,7 @@ def find_int(a,b,c,d):
     l = [sorted_x[1],sorted_y[2]]
     r = [sorted_x[2],sorted_y[1]]
 
-    print ("As coords das diagonais sao ")
+    print "As coords das diagonais sao "
     print l
     print r
 
