@@ -15,15 +15,15 @@ def ast(a):
             return [op, ast(a[:index]), ast(a[index+1:])]
     return a
 
-def parse(string):
-    return [typify(s) for s in string.split(" ")]
-
 def eval(ast):
     if len(ast) == 1: return ast[0]
     op, exp1, exp2 = ast
     if op == "+": return eval(exp1) + eval(exp2)
     if op == "*": return eval(exp1) * eval(exp2)
     else: raise "Unexpected value"
+
+def parse(string):
+    return [typify(s) for s in string.split(" ")]
 
 # I: doesn't support parentheses
 def interpret(string):
