@@ -1,14 +1,5 @@
 import React, {Component} from 'react';
-import {
-  flexDefault,
-  padStyle,
-  canvasStyle,
-  startStopButtonStyle,
-  titleStyle,
-  interfaceStyle,
-  linkStyle,
-  appStyle,
-} from '../static/style';
+import s from '../static/style';
 
 const types = [
   { name: "default", color: "#E6E8BF", file: "" },
@@ -41,7 +32,7 @@ class Pad extends Component {
     return (
       <div
         style={{
-          ...padStyle,
+          ...s.padStyle,
           backgroundColor: types[this.state.type].color,
           boxShadow: (active ? null : '3px 3px 3px #9E9E9E'),
         }}
@@ -72,7 +63,7 @@ class Canvas extends Component {
     const { activeIndex } = this.state;
     if (playing) this.cycleActiveIndex();
     return (
-      <div style={{ ...canvasStyle }}>
+      <div style={{ ...s.canvasStyle }}>
         {[...Array(16)].map((e, i) =>
           <Pad key={i} active={playing && activeIndex === i} />
         )}
@@ -82,7 +73,7 @@ class Canvas extends Component {
 };
 
 const StartStopButton = ({onClick, label}) => (
-  <div style={{ ...startStopButtonStyle }} onClick={onClick} >
+  <div style={{ ...s.startStopButtonStyle }} onClick={onClick} >
     {label}
   </div>
 );
@@ -91,17 +82,12 @@ class BpmInput extends Component {
   render() {
     return (
       <div style={{
-        ...flexDefault,
+        ...s.flexDefault,
         flexDirection: 'column',
       }}>
         <span>BPM</span>
         <input
-          style={{
-            fontFamily: 'PhatBoy',
-            width: '42px',
-            padding: '4px',
-            textAlign: 'center',
-          }}
+          style={{ ...s.inputStyle }}
           type='number'
           value={this.props.bpm}
           onChange={(e) => this.props.handleBpm(e)}
@@ -126,7 +112,7 @@ class Interface extends Component {
   render() {
     const {bpm, playing} = this.state;
     return (
-      <div style={{ ...interfaceStyle }}>
+      <div style={{ ...s.interfaceStyle }}>
         <style global jsx>{`
           @font-face {
             font-family: 'PhatBoy';
@@ -134,7 +120,7 @@ class Interface extends Component {
           }
         `}</style>
 
-        <p style={{ ...titleStyle }}>Roland TR 808</p>
+        <p style={{ ...s.titleStyle }}>Roland TR 808</p>
         <Canvas 
           playing={playing}
           interval={1000 * (60 / this.state.bpm / 4)}
@@ -152,7 +138,7 @@ class Interface extends Component {
             handleBpm={this.handleBpm.bind(this)}
           />
         </div>
-        <a style={{...linkStyle}} href="https://csciutto.github.io">
+        <a style={{...s.linkStyle}} href="https://csciutto.github.io">
           by csciutto
         </a>
       </div>

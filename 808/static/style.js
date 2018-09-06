@@ -1,24 +1,24 @@
-export const flexDefault = {
+const flexDefault = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 }
 
-export const padStyle = {
+const padStyle = {
   height: '150px',
   width: '150px',
   borderRadius: '5px',
   margin: '6px',
 }
 
-export const canvasStyle = {
+const canvasStyle = {
   ...flexDefault,
   height: '100%',
   width: '648px',
   flexWrap: 'wrap',
 }
 
-export const startStopButtonStyle = {
+const startStopButtonStyle = {
   ...flexDefault,
   height: '45px',
   width: '200px',
@@ -30,22 +30,40 @@ export const startStopButtonStyle = {
   color: 'white',
 }
 
-export const titleStyle = {
+const titleStyle = {
   fontFamily: 'PhatBoy',
   fontSize: '54px',
   margin: '40px',
 }
 
-export const interfaceStyle = {
+const interfaceStyle = {
   ...flexDefault,
   flexDirection: 'column',
   fontFamily: 'PhatBoy',
 }
 
-export const linkStyle = {
+const linkStyle = {
   fontSize: '10px',
   fontFamily: 'sans-serif',
   marginTop: '20px',
   textDecoration: 'none',
   color: '#000000'
+}
+
+const inputStyle = {
+  fontFamily: 'PhatBoy',
+  width: '42px',
+  padding: '4px',
+  textAlign: 'center',
+}
+
+export default {
+  flexDefault,
+  padStyle,
+  canvasStyle,
+  startStopButtonStyle,
+  titleStyle,
+  interfaceStyle,
+  linkStyle,
+  inputStyle,
 }
