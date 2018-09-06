@@ -26,20 +26,13 @@ const startStopButtonStyle = {
   marginTop: '30px',
   backgroundColor: '#2F2E3E',
   boxShadow: '3px 3px 3px #9E9E9E',
-  fontFamily: 'PhatBoy',
   color: 'white',
 }
 
 const titleStyle = {
-  fontFamily: 'PhatBoy',
   fontSize: '54px',
-  margin: '40px',
-}
-
-const interfaceStyle = {
-  ...flexDefault,
-  flexDirection: 'column',
-  fontFamily: 'PhatBoy',
+  margin: '40px 0px 20px 0px',
+  textAlign: 'center',
 }
 
 const linkStyle = {
@@ -57,13 +50,20 @@ const inputStyle = {
   textAlign: 'center',
 }
 
+const appStyle = {
+  ...flexDefault,
+  flexDirection: 'column',
+  fontFamily: 'PhatBoy',
+}
+
+
 export default {
   flexDefault,
   padStyle,
   canvasStyle,
   startStopButtonStyle,
   titleStyle,
-  interfaceStyle,
   linkStyle,
   inputStyle,
+  appStyle,
 }

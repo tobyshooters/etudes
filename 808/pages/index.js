@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {PureComponent, Component} from 'react';
 import s from '../static/style';
 
 const types = [
@@ -8,7 +8,7 @@ const types = [
   { name: "hat",     color: "#DD1D00", file: "/static/sounds/hat.mp3"   },
 ]
 
-class Pad extends Component {
+class Pad extends PureComponent {
   state = { type: 0 }
 
   cycleType = () => this.setState({
@@ -17,7 +17,10 @@ class Pad extends Component {
 
   playAudio = () => {
     const path = types[this.state.type].file;
-    if (path) new Audio(path).play();
+    if (path) {
+      const audio = new Audio(path);
+      audio.play();
+    }
   }
 
   handleClick = async () => {
@@ -49,9 +52,9 @@ class Canvas extends Component {
   }
 
   cycleActiveIndex = () => {
-    this.timeout = setTimeout(() => this.setState(
-      { activeIndex: (this.state.activeIndex + 1) % 16 }
-    ), this.props.interval);
+    this.timeout = setTimeout(() => this.setState({
+      activeIndex: (this.state.activeIndex + 1) % 16
+    }), this.props.interval);
   }
 
   componentWillReceiveProps = (newProps) => {
@@ -98,7 +101,7 @@ class BpmInput extends Component {
   }
 };
 
-class Interface extends Component {
+class App extends Component {
   state = {
     playing: false,
     bpm: 120,
@@ -112,7 +115,7 @@ class Interface extends Component {
   render() {
     const {bpm, playing} = this.state;
     return (
-      <div style={{ ...s.interfaceStyle }}>
+      <div style={{ ...s.appStyle }}>
         <style global jsx>{`
           @font-face {
             font-family: 'PhatBoy';
@@ -120,8 +123,8 @@ class Interface extends Component {
           }
         `}</style>
 
-        <p style={{ ...s.titleStyle }}>Roland TR 808</p>
-        <Canvas 
+      <p style={{ ...s.titleStyle }}>Roland<br/>TR-808</p>
+        <Canvas
           playing={playing}
           interval={1000 * (60 / this.state.bpm / 4)}
         />
@@ -146,4 +149,4 @@ class Interface extends Component {
   }
 };
 
-export default () => <Interface/>;
+export default () => <App/>;
