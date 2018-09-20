@@ -1,70 +1,109 @@
-# parser etude: evaluating arithmetic expressions
+# LISP interpreter in Python
+# Follows from: norvig.com/lispy.html
 
-def typify(s):
-    try: return int(s)
-    except: return s
+import re
+import math
+import operator as op
 
-def find(a, e):
-    try: return a.index(e)
-    except: return None
+Symbol = str
+Number = (int, float)
+Atom   = (Symbol, Number)
+List   = list
+Exp    = (Atom , List)
 
-def ast(a):
-    for op in ["+", "*"]:
-        index = find(a, op)
-        if index != None:
-            return [op, ast(a[:index]), ast(a[index+1:])]
-    return a
+class Env(dict):
+    def __init__(self, d, p=None):
+        self.update(d);
+        self.parent = p;
+    def get(self, s):
+        return self[s] if s in self else self.parent.get(s)
 
-def parse(string):
-    return [typify(s) for s in string.split(" ")]
+class Procedure(object):
+    def __init__(self, params, body, env):
+        self.params, self.body, self.env = params, body, env
+    def __call__(self, *args):
+        return eval(self.body, Env(zip(self.params, args), self.env))
 
-def eval(ast):
-    if len(ast) == 1: return ast[0]
-    op, exp1, exp2 = ast
-    if op == "+": return eval(exp1) + eval(exp2)
-    if op == "*": return eval(exp1) * eval(exp2)
-    else: raise "Unexpected value"
+global_dict = {
+    "+": op.add, "-": op.sub, "*": op.mul, "/": op.truediv,
+    ">": op.gt, "<": op.lt, ">=": op.ge, "<=": op.le, "=": op.eq,
+    "abs":     abs,
+    "append":  op.add,
+    "apply":   lambda proc, args: proc(*args),
+    "begin":   lambda *x: x[-1],
+    "car":     lambda x: x[0],
+    "cdr":     lambda x: x[1:],
+    "cons":    lambda x, y: [x] + y,
+    "eq?":     op.is_,
+    "expt":    pow,
+    "equal?":  op.eq,
+    "length":  len,
+    "list":    lambda *x: List(x),
+    "list?":   lambda x: isinstance(x, List),
+    "map":     map,
+    "max":     max,
+    "min":     min,
+    "not":     op.not_,
+    "null?":   lambda x: x == [],
+    "number?": lambda x: isinstance(x, Number),
+    "proc?":   callable,
+    "round":   round,
+    "symbol?": lambda x: isinstance(x, Symbol)
+}
+global_dict.update(vars(math))
 
-# I: doesn't support parentheses
-def interpret(string):
-    return eval(ast(parse(string)))
+env = Env(global_dict)
 
-def parens(a):
-    stack = [[]]
-    for e in a:
-        if e == "(":
-            stack.append([])
-        elif e == ")":
-            stack[-1].append(eval(ast(stack.pop())))
+def parse(line):
+    def atom(token):
+        try: return int(token)
+        except ValueError:
+            try: return float(token)
+            except ValueError:
+                return token
+
+    def tree(tokens):
+        if len(tokens) == 0: raise SyntaxError("unexpected EOF")
+        if tokens[0] == ')': raise SyntaxError("unexpected )")
+        token = tokens.pop(0)
+        if token == '(':
+            ast = []
+            while (tokens[0] != ')'):
+                ast.append(tree(tokens))
+            tokens.pop(0)
+            return ast
         else:
-            stack[-1].append(e)
-    return eval(ast(stack.pop()))
+            return atom(token)
 
-# II: supports parentheses
-def math(string):
-    return parens(parse(string))
+    def tokenize(line):
+        return [s for s in re.split("([\(\)\s])", line) if s and s != ' ']
 
-# III: ast is beautiful, but overkill
-def reduce(a, f, init):
-    for e in a:
-        init = f(init, e)
-    return init
+    return tree(tokenize(line))
 
-def eval2(string):
-    return reduce(string.split("+"), lambda a, c: a 
-            + reduce(c.split("*"), lambda a, c: a * int(c), 1), 0)
+def eval(x, env=env):
+    if isinstance(x, Symbol): return env.get(x)
+    if not isinstance(x, List): return x
+    op, *args = x
+    if op == "quote":
+        return args[0]
+    elif op == "if":
+        (test, conseq, alt) = args
+        exp = conseq if eval(test, env) else alt
+        return eval(exp, env)
+    elif op == "define":
+        (sym, exp) = args
+        env[sym] = eval(exp, env)
+        return "Defined: " + sym
+    elif op == "lambda":
+        (params, exp) = args
+        return Procedure(params, exp, env)
+    else:
+        proc = eval(op, env)
+        args = [eval(arg, env) for arg in args]
+        return proc(*args)
 
-def parens2(s):
-    stack = [""]
-    for e in s:
-        if e == "(":
-            stack.append("")
-        elif e == ")":
-            result = eval2(stack.pop())
-            stack[-1] += str(result)
-        else:
-            stack[-1] += e
-    return eval2(stack.pop())
-
-def math2(string):
-    return parens2(string.replace(" ", ""))
+if __name__ == "__main__":
+    while (True):
+        line = input("> ")
+        result = eval(parse(line))
+        print(result)
