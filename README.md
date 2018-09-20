@@ -1,4 +1,4 @@
-# Challenges
+# Etudes
 Small projects and solutions to challenges
 
 Some highlights, in my opinion, are:
