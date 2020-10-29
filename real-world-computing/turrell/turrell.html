@@ -1,0 +1,69 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+<script>
+
+    function wallToImage(h, pct, radius) {
+        // Calculate A and B from image's radius
+        var D = 13;
+        var tr = 1.62;
+        var B = D / (1 + (radius * tr) / 1920);
+        var A = D - B;
+
+        // Given A, B, along with pct along width, find scaling
+        var s = (pct + B) / (A + B);
+        
+        // Point's height needs to be augmented by projectors angle
+        var boost_px = 0.15 * 1080;
+
+        return s * (h + boost_px);
+    }
+
+    function setup() {
+        frameRate(30);
+        createCanvas(1920, 1080);
+    }
+
+    function draw() {
+        var osc = 0.5 * (sin(0.05 * frameCount) + 1);
+        var delta = 140 * osc;
+
+        // CUBE
+        // var cube = [];
+        // var cube_pts = [
+        //     [   0, wallToImage(250 + delta, 0)],
+        //     [ 100, wallToImage(175 + delta, 1)]
+        //     [ 100, wallToImage( 60 + delta, 1)],
+        //     [   0, wallToImage(  0 + delta, 0)],
+        //     [-100, wallToImage( 60 + delta, 0)],
+        //     [-100, wallToImage(175 + delta, 0)],
+        // ];
+        // for (var cube_pt in cube_pts) {
+        //     cube.push([2.5 * cube_pt[0], 2.5 * cube_pt[1] + 100]);
+        // }
+
+        // CIRCLE
+        var circle = [];
+        for (var t = 0; t < 6.28; t += 0.01) {
+            var radius = 200;
+            var x = radius * cos(t);
+            var y = radius * sin(t) + radius + 200;
+            circle.push([x, wallToImage(y, abs(cos(t)), radius)]);
+        }
+        console.log(circle);
+
+        background(0);
+        stroke(255, 0, 0);
+        line(width/2, 0, width/2, height);
+
+        fill(255);
+        beginShape();
+        for (point of circle) {
+            console.log(point);
+            vertex(width/2 + point[0], height - point[1]);
+        }
+        endShape(CLOSE);
+    }
+
+    function mouseClicked() {
+        //points.push([mouseX, mouseY]);
+    }
+</script>

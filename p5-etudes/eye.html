@@ -1,0 +1,44 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+<script>
+    function drawTriangle(f) {
+        let eyelidRadius = 525;
+
+        let dx1 =  width/2 + eyelidRadius * cos(PI * f);
+        let dx2 =  width/2 + eyelidRadius * cos(PI * (f + 0.05));
+        let dy1 = height/2 + eyelidRadius * sin(PI * f);
+        let dy2 = height/2 + eyelidRadius * sin(PI * (f + 0.05));
+        let dxi =  width/2 + 2000         * cos(PI * f);
+        let dyi = height/2 + 2000         * sin(PI * f);
+
+        fill(10, 10, 10);
+        triangle(dx1, 150 + dy1, dx2, 150 + dy2, dxi, dyi);
+        triangle(dx1, -150 + dy1, dx2, -150 + dy2, dxi, dyi);
+    }
+
+    function setup () {
+        createCanvas(1280, 960);
+        background(255, 250, 240);
+        strokeWeight(2);
+    }
+
+    f = 0;
+
+    function draw() {
+        let radius = 180 + random(200);
+        let x = width/2 + radius * cos(PI * f);
+        let y = height/2 + radius * sin(PI * f);
+
+        stroke(155 + random(-30, 30), 220 + random(-30, 30), 155 + random(-30, 30), 50);
+        line(width/2 + random(-100, 100), height/2 + random(-100, 100), x, y);
+
+        noStroke()
+        fill(0, 0, 0, 80);
+        let irisRadius = 180;
+        ellipse(width/2, height/2, irisRadius);
+
+        for (let r = 0; r < 2; r += 0.01) 
+            drawTriangle(r);
+
+        f += random(1);
+    }
+</script>

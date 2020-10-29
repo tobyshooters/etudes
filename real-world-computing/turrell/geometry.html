@@ -1,0 +1,32 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+<script>
+
+    function setup() {
+        frameRate(30);
+        createCanvas(windowWidth, windowHeight);
+        fullscreen();
+    }
+
+    let offset = 1.21;
+    let resolutionX = 1920;
+    let resolutionY = 1080;
+    let throwRatio = 1.62;
+    let aspectRatio = 16/9;
+
+    function draw() {
+        background(0);
+        strokeWeight(20);
+
+
+        <!-- stroke(255, 0, 0); -->
+        <!-- line(width/4, height/2, 3*width/4, height/2) -->
+
+        stroke(0, 255, 0);
+        let factor = 1 - 0.39;
+        line(width/4, height/2, width/2, factor*height)
+        line(width/2, factor*height, 3*width/4, height/2)
+
+
+        line(width/2, 0, width/2, height)
+    }
+</script>

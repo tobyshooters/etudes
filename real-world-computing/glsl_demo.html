@@ -1,0 +1,90 @@
+<style>
+    canvas { height: 400px; width: 600; }
+    video  { display: none; }
+</style>
+
+<center>
+    <canvas id="c"></canvas>
+    <video id="v" playsinline></video>
+</center>
+
+<script type="text/javascript" src="https://rawgit.com/patriciogonzalezvivo/glslCanvas/master/dist/GlslCanvas.js"></script>
+
+<script>
+    const video = document.getElementById('v');
+    const canvas = document.getElementById('c');
+    let glslCanvas = new GlslCanvas(canvas);
+    const buffer = document.createElement('canvas');
+
+    ///////////////////////////////////////////////////
+    // Injecting custom code into shader with button
+    ///////////////////////////////////////////////////
+
+    function loadShader() {
+        let shader = `
+            #ifdef GL_ES
+            precision mediump float;
+            #endif
+
+            uniform sampler2D u_texture;
+            uniform vec2 u_resolution;
+            uniform float u_time;
+
+            void main() {
+              vec2 st = gl_FragCoord.xy / u_resolution.xy;
+              st.y = st.y * u_resolution.y / u_resolution.x;
+              st.x = 1.0 - st.x;
+              st = floor(20.0 * st) / 20.0;
+              vec3 color = texture2D(u_texture, st).rgb;
+              gl_FragColor = vec4(color, 1.0);
+            }
+          `;
+
+        glslCanvas.load(shader);
+    }
+
+    ///////////////////////////////////////////////////
+    // Requesting video stream from user
+    ///////////////////////////////////////////////////
+
+    function init() {
+        window.navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: { 
+                facing: 'user' 
+            }
+        }).then(stream => {
+            video.srcObject = stream;
+            video.play();
+            loadShader();
+        });
+    }
+
+    ///////////////////////////////////////////////////
+    // Copy video to buffer, set as texture for shader
+    ///////////////////////////////////////////////////
+
+    function render() {
+
+        buffer.width = video.videoWidth;
+        buffer.height = video.videoHeight;
+        let ctx = buffer.getContext('2d');
+        ctx.drawImage(video, 0, 0);
+
+        canvas.width = buffer.width;
+        canvas.height = buffer.height;
+
+        var dataURL = buffer.toDataURL();
+        glslCanvas.setUniform('u_texture', dataURL);
+
+        window.requestAnimationFrame(render);
+    }
+
+    ///////////////////////////////////////////////////
+    // Initialize video stream, begin render
+    ///////////////////////////////////////////////////
+
+    video.addEventListener('canplay', render);
+    init();
+
+</script>

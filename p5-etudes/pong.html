@@ -1,0 +1,80 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+<script>
+    function setup() {
+        createCanvas(640, 480);
+        noStroke();
+    }
+
+    let paddles = [
+        { x: 10, y: 240, width: 10, height: 80 },
+        { x: 620, y: 240, width: 10, height: 80 }
+    ]
+
+    let ball = { x: 320, y: 240, dx: 5, dy: 5, side: 20 }
+
+    let leftScore = 0;
+    let rightScore = 0;
+
+    function drawPaddle(p) {
+        rect(p.x, p.y, p.width, p.height);
+    }
+
+    function drawBall(b) {
+        rect(b.x, b.y, b.side, b.side);
+    }
+
+    function leftIntersect(p, b) {
+        if (p.x + p.width > b.x && p.y < b.y && p.y + height > b.y + b.side) {
+            return { ...b, dx: b.dx * -1 };
+        }
+        return b;
+    }
+
+    function rightIntersect(p, b) {
+        if (p.x < b.x + b.side && p.y < b.y && p.y + height > b.y + b.side) {
+            return { ...b, dx: b.dx * -1 };
+        }
+        return b;
+    }
+
+    function wallIntersect(b) {
+        if (b.x < 0) {
+            rightScore += 1;
+            console.log("Left:  ", leftScore);
+            console.log("Right: ", rightScore);
+            reset();
+            return;
+        } else if (b.x + b.side > 640) {
+            leftScore += 1;
+            console.log("Left:  ", leftScore);
+            console.log("Right: ", rightScore);
+            reset();
+            return;
+        } else if (b.y < 0 || b.y + b.side > 480) {
+            return { ...b, dy: b.dy * -1 };
+        } else {
+            return b;
+        }
+    }
+
+    function updatePhysics(){
+        ball.x += ball.dx;
+        ball.y += ball.dy;
+        ball = wallIntersect(ball);
+        ball = leftIntersect(paddles[0], ball);
+        ball = rightIntersect(paddles[1], ball);
+    }
+
+    function drawObjects() {
+        fill(0, 128, 0);
+        drawBall(ball);
+        drawPaddle(paddles[0]);
+        drawPaddle(paddles[1]);
+    }
+
+    function draw() {
+        background(0);
+        updatePhysics();
+        drawObjects();
+    }
+</script>

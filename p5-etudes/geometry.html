@@ -1,0 +1,28 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+<script>
+    function setup() {
+        createCanvas(640, 480, WEBGL);
+        noFill();
+    }
+
+    function draw() {
+        background(200);
+        rotateY(PI / 6);
+        stroke(153);
+        box(35);
+
+        let rad = millis() / 1000;
+
+        // Set rotation angles
+        let ct = cos(rad);
+        let st = sin(rad);
+
+        applyMatrix(  ct, 0.0,  st,  0.0,
+                     0.0, 1.0, 0.0,  0.0,
+                     -st, 0.0,  ct,  0.0,
+                     0.0, 0.0, 0.0,  1.0);
+        stroke(255);
+        box(50);
+    }
+
+</script>

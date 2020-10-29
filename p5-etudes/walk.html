@@ -1,0 +1,35 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+<script>
+    function Walker(x, y) {
+        this.x = x;
+        this.y = y;
+
+        this.walk = function() {
+            switch (floor(random(4))) {
+                case 0: this.x += 1; break;
+                case 1: this.x -= 1; break;
+                case 2: this.y += 1; break;
+                case 3: this.y -= 1; break;
+            }
+        }
+
+        this.draw = function() {
+            stroke(0);
+            point(this.x, this.y);
+        }
+    }
+
+    let WIDTH, HEIGHT, w;
+
+    function setup() {
+        WIDTH = 640;
+        HEIGHT = 480;
+        createCanvas(WIDTH, HEIGHT);
+        w = new Walker(WIDTH/2, HEIGHT/2);
+    }
+
+    function draw() {
+        w.walk()
+        w.draw()
+    }
+</script>
